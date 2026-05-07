@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { CheckCircle2, Clock, TrendingUp, Circle } from 'lucide-react'
+import { CheckCircle2, Clock, TrendingUp, Trophy, Users, ArrowUpRight } from 'lucide-react'
 import useAppStore from '../store/useAppStore'
 
 const stagger = {
@@ -14,12 +14,36 @@ const fadeUp = {
 export default function Team() {
   const { teamMembers, tasks } = useAppStore()
 
+  const totalCompleted = tasks.filter(t => t.status === 'done').length
+  const totalInProgress = tasks.filter(t => t.status === 'inprogress').length
+  const avgScore = Math.round(teamMembers.reduce((a, m) => a + m.score, 0) / teamMembers.length)
+  const onlineCount = teamMembers.filter(m => m.online).length
+
   return (
     <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-6">
+
+      {/* Team Summary Cards */}
+      <motion.div variants={fadeUp} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: 'Ekip Üyesi', value: teamMembers.length, icon: Users, color: 'text-gold', bg: 'bg-gold-dim' },
+          { label: 'Çevrimiçi', value: onlineCount, icon: ArrowUpRight, color: 'text-status-success', bg: 'bg-status-success/10' },
+          { label: 'Ortalama Skor', value: `${avgScore}%`, icon: Trophy, color: 'text-status-warning', bg: 'bg-status-warning/10' },
+          { label: 'Tamamlanan', value: totalCompleted, icon: CheckCircle2, color: 'text-status-info', bg: 'bg-status-info/10' },
+        ].map((stat, i) => (
+          <motion.div key={i} variants={fadeUp} className="stat-card">
+            <div className={`w-9 h-9 rounded-xl ${stat.bg} flex items-center justify-center`}>
+              <stat.icon size={18} className={stat.color} />
+            </div>
+            <p className="text-2xl font-bold text-text-primary">{stat.value}</p>
+            <p className="text-xs text-text-muted">{stat.label}</p>
+          </motion.div>
+        ))}
+      </motion.div>
+
       {/* Header */}
       <motion.div variants={fadeUp} className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-text-muted">{teamMembers.length} kişi · {teamMembers.filter(m => m.online).length} çevrimiçi</p>
+          <p className="text-sm text-text-muted">{teamMembers.length} kişi · {onlineCount} çevrimiçi</p>
         </div>
         <div className="flex items-center gap-2">
           {teamMembers.filter(m => m.online).map(m => (
@@ -64,7 +88,10 @@ export default function Team() {
                                     ${member.online ? 'bg-status-success' : 'bg-bg-border'}`} />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-text-primary">{member.name}</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-sm font-semibold text-text-primary">{member.name}</p>
+                      {member.score >= 95 && <span className="text-xs">🏅</span>}
+                    </div>
                     <p className="text-xs text-text-muted">{member.role}</p>
                   </div>
                 </div>

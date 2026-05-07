@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion'
-import { CheckCircle2, Clock, TrendingUp, Users, Zap, AlertTriangle } from 'lucide-react'
+import { CheckCircle2, Clock, TrendingUp, Users, Zap, AlertTriangle, Target, ArrowUpRight } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, Legend
+  PieChart, Pie, Cell, AreaChart, Area
 } from 'recharts'
-import { weeklyData, activityFeed, kpiData, teamMembers } from '../data/mockData'
+import { weeklyData, activityFeed, kpiData, teamMembers, sprintData } from '../data/mockData'
 import useAppStore from '../store/useAppStore'
 
 const stagger = {
@@ -17,12 +17,12 @@ const fadeUp = {
 }
 
 const kpiCards = [
-  { label: 'Toplam Görev', value: kpiData.totalTasks, icon: CheckCircle2, color: 'text-gold', bg: 'bg-gold-dim', trend: '+2 bu hafta' },
-  { label: 'Bugün Tamamlanan', value: kpiData.completedToday, icon: TrendingUp, color: 'text-status-success', bg: 'bg-status-success/10', trend: '+1 dünden fazla' },
-  { label: 'Devam Eden', value: kpiData.inProgress, icon: Clock, color: 'text-status-info', bg: 'bg-status-info/10', trend: '4 aktif sprint' },
-  { label: 'Ekip Skoru', value: `${kpiData.teamScore}%`, icon: Users, color: 'text-status-warning', bg: 'bg-status-warning/10', trend: '+3% bu ay' },
-  { label: 'Pomodoro Bugün', value: kpiData.pomodorosToday, icon: Zap, color: 'text-gold', bg: 'bg-gold-dim', trend: '2.5 sa odak' },
-  { label: 'Yaklaşan Tarih', value: kpiData.upcomingDeadlines, icon: AlertTriangle, color: 'text-status-danger', bg: 'bg-status-danger/10', trend: 'Bu hafta içinde' },
+  { label: 'Toplam Görev', value: kpiData.totalTasks, icon: CheckCircle2, color: 'text-gold', bg: 'bg-gold-dim', trend: '+2 bu hafta', trendUp: true },
+  { label: 'Bugün Tamamlanan', value: kpiData.completedToday, icon: TrendingUp, color: 'text-status-success', bg: 'bg-status-success/10', trend: '+1 dünden fazla', trendUp: true },
+  { label: 'Devam Eden', value: kpiData.inProgress, icon: Clock, color: 'text-status-info', bg: 'bg-status-info/10', trend: '4 aktif sprint', trendUp: null },
+  { label: 'Ekip Skoru', value: `${kpiData.teamScore}%`, icon: Users, color: 'text-status-warning', bg: 'bg-status-warning/10', trend: '+3% bu ay', trendUp: true },
+  { label: 'Pomodoro Bugün', value: kpiData.pomodorosToday, icon: Zap, color: 'text-gold', bg: 'bg-gold-dim', trend: '2.5 sa odak', trendUp: true },
+  { label: 'Yaklaşan Tarih', value: kpiData.upcomingDeadlines, icon: AlertTriangle, color: 'text-status-danger', bg: 'bg-status-danger/10', trend: 'Bu hafta içinde', trendUp: false },
 ]
 
 const DONUT_DATA = [
@@ -50,15 +50,73 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function Dashboard() {
   const { tasks, teamMembers: members } = useAppStore()
 
+  const sprintProgress = Math.round((sprintData.completedTasks / sprintData.totalTasks) * 100)
+  const sprintGoalsDone = sprintData.goals.filter(g => g.done).length
+
   return (
     <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-6">
+
+      {/* Welcome Banner */}
+      <motion.div
+        variants={fadeUp}
+        className="relative overflow-hidden card p-6 bg-mesh"
+      >
+        <div className="relative z-10 flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-text-primary">
+              Hoş geldin! 🚀
+            </h2>
+            <p className="text-sm text-text-secondary mt-1">
+              Bugün <span className="text-gold font-semibold">{kpiData.completedToday}</span> görev tamamladın.
+              {' '}Devam et, harika gidiyorsun!
+            </p>
+          </div>
+          <div className="hidden md:flex items-center gap-4">
+            <div className="text-right">
+              <p className="text-xs text-text-muted">{sprintData.name}</p>
+              <p className="text-sm font-semibold text-gold">{sprintProgress}% tamamlandı</p>
+            </div>
+            <div className="w-16 h-16 rounded-2xl bg-gold-dim flex items-center justify-center">
+              <Target size={24} className="text-gold" />
+            </div>
+          </div>
+        </div>
+
+        {/* Sprint Goals */}
+        <div className="relative z-10 flex gap-3 mt-4">
+          {sprintData.goals.map(goal => (
+            <div
+              key={goal.id}
+              className={`flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg border transition-all
+                ${goal.done
+                  ? 'bg-status-success/10 border-status-success/30 text-status-success'
+                  : 'bg-bg-elevated border-bg-border text-text-muted'
+                }`}
+            >
+              <div className={`w-3 h-3 rounded-full flex-shrink-0 ${goal.done ? 'bg-status-success' : 'bg-bg-border'}`} />
+              <span className={goal.done ? 'line-through' : ''}>{goal.text}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Decorative gradient orb */}
+        <div className="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-gold/5 blur-3xl" />
+      </motion.div>
 
       {/* KPI Cards */}
       <motion.div variants={fadeUp} className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
         {kpiCards.map((kpi, i) => (
           <motion.div key={i} variants={fadeUp} className="stat-card group" id={`kpi-${i}`}>
-            <div className={`w-9 h-9 rounded-xl ${kpi.bg} flex items-center justify-center`}>
-              <kpi.icon size={18} className={kpi.color} />
+            <div className="flex items-center justify-between">
+              <div className={`w-9 h-9 rounded-xl ${kpi.bg} flex items-center justify-center`}>
+                <kpi.icon size={18} className={kpi.color} />
+              </div>
+              {kpi.trendUp !== null && (
+                <ArrowUpRight
+                  size={14}
+                  className={`${kpi.trendUp ? 'text-status-success' : 'text-status-danger rotate-90'} opacity-0 group-hover:opacity-100 transition-opacity`}
+                />
+              )}
             </div>
             <div>
               <p className="text-2xl font-bold text-text-primary">{kpi.value}</p>
@@ -131,7 +189,10 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Activity Feed */}
         <motion.div variants={fadeUp} className="card p-5 lg:col-span-2">
-          <h2 className="text-sm font-semibold text-text-primary mb-4">Son Aktiviteler</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-text-primary">Son Aktiviteler</h2>
+            <span className="text-xs text-text-muted">{activityFeed.length} kayıt</span>
+          </div>
           <div className="space-y-3">
             {activityFeed.map((item, i) => {
               const member = teamMembers.find(m => m.id === item.user)
@@ -169,15 +230,27 @@ export default function Dashboard() {
 
         {/* Team Performance */}
         <motion.div variants={fadeUp} className="card p-5">
-          <h2 className="text-sm font-semibold text-text-primary mb-4">Ekip Performansı</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-text-primary">Ekip Performansı</h2>
+            <span className="text-xs text-gold bg-gold-dim px-2 py-0.5 rounded-full font-medium">
+              Top {members.length}
+            </span>
+          </div>
           <div className="space-y-4">
             {members.slice(0, 4).map((m, i) => (
               <div key={m.id} className="flex items-center gap-3">
-                <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0 text-bg-base"
-                  style={{ backgroundColor: m.avatarColor }}
-                >
-                  {m.avatar}
+                <div className="relative">
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0 text-bg-base"
+                    style={{ backgroundColor: m.avatarColor }}
+                  >
+                    {m.avatar}
+                  </div>
+                  {i === 0 && (
+                    <div className="absolute -top-1 -right-1 text-gold">
+                      <span className="text-xs">👑</span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">

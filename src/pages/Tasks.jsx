@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, X, Calendar, User, Tag, ChevronDown, Grip } from 'lucide-react'
+import { Plus, X, Calendar, User, Tag, ChevronDown, Grip, BarChart3 } from 'lucide-react'
 import useAppStore from '../store/useAppStore'
 import { teamMembers } from '../data/mockData'
 
@@ -137,7 +137,7 @@ function TaskModal({ task, onClose }) {
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <div>
                 <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Atanan</p>
                 {assignee && (
@@ -156,7 +156,14 @@ function TaskModal({ task, onClose }) {
                 <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Son Tarih</p>
                 <div className="flex items-center gap-2 text-sm text-text-primary">
                   <Calendar size={14} className="text-text-muted" />
-                  {task.dueDate}
+                  {task.dueDate || '—'}
+                </div>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Oluşturulma</p>
+                <div className="flex items-center gap-2 text-sm text-text-primary">
+                  <Calendar size={14} className="text-text-muted" />
+                  {task.createdAt || '—'}
                 </div>
               </div>
             </div>
@@ -189,7 +196,7 @@ function TaskModal({ task, onClose }) {
             <div className="flex gap-2 pt-2 border-t border-bg-border">
               <button
                 onClick={() => { deleteTask(task.id); onClose() }}
-                className="btn-ghost text-status-danger hover:text-status-danger hover:bg-status-danger/10 flex-1"
+                className="btn-danger flex-1"
               >
                 Görevi Sil
               </button>
@@ -231,8 +238,43 @@ export default function Tasks() {
       return t.priority === filter
     })
 
+  const todoCount = tasks.filter(t => t.status === 'todo').length
+  const progressCount = tasks.filter(t => t.status === 'inprogress').length
+  const doneCount = tasks.filter(t => t.status === 'done').length
+
   return (
     <div className="space-y-4">
+      {/* Summary Bar */}
+      <div className="card p-4">
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2">
+            <BarChart3 size={16} className="text-gold" />
+            <span className="text-sm font-semibold text-text-primary">Görev Özeti</span>
+          </div>
+          <div className="flex items-center gap-4 ml-auto">
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-text-muted" />
+              <span className="text-xs text-text-muted">Bekleyen: <span className="text-text-primary font-semibold">{todoCount}</span></span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-status-info" />
+              <span className="text-xs text-text-muted">Devam: <span className="text-text-primary font-semibold">{progressCount}</span></span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-status-success" />
+              <span className="text-xs text-text-muted">Bitti: <span className="text-text-primary font-semibold">{doneCount}</span></span>
+            </div>
+          </div>
+          {/* Mini progress */}
+          <div className="hidden md:block w-32">
+            <div className="h-2 bg-bg-border rounded-full overflow-hidden flex">
+              <div className="h-full bg-status-success" style={{ width: `${tasks.length > 0 ? (doneCount / tasks.length) * 100 : 0}%` }} />
+              <div className="h-full bg-status-info" style={{ width: `${tasks.length > 0 ? (progressCount / tasks.length) * 100 : 0}%` }} />
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Filter Bar */}
       <div className="flex items-center gap-2">
         {['all', 'high', 'medium', 'low'].map(f => (

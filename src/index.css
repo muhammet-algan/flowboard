@@ -26,6 +26,11 @@
     min-height: 100vh;
   }
 
+  ::selection {
+    background-color: rgba(245, 200, 66, 0.3);
+    color: #F5C842;
+  }
+
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -47,11 +52,19 @@
 
 @layer components {
   .card {
-    @apply bg-bg-surface border border-bg-border rounded-2xl;
+    @apply bg-bg-surface border border-bg-border rounded-2xl shadow-inner-glow;
   }
 
   .card-elevated {
-    @apply bg-bg-elevated border border-bg-border rounded-2xl;
+    @apply bg-bg-elevated border border-bg-border rounded-2xl shadow-inner-glow;
+  }
+
+  .card-glass {
+    @apply bg-bg-surface/60 backdrop-blur-md border border-bg-border/50 rounded-2xl;
+  }
+
+  .card-interactive {
+    @apply card hover:border-gold/30 hover:shadow-gold-sm transition-all duration-300 cursor-pointer;
   }
 
   .btn-primary {
@@ -60,9 +73,19 @@
            shadow-gold-sm text-sm;
   }
 
+  .btn-secondary {
+    @apply bg-bg-elevated border border-bg-border text-text-primary font-medium px-4 py-2 rounded-xl
+           hover:border-gold/50 hover:text-gold active:scale-95 transition-all duration-200 text-sm;
+  }
+
   .btn-ghost {
     @apply text-text-secondary hover:text-text-primary hover:bg-bg-elevated
            px-4 py-2 rounded-xl transition-all duration-200 text-sm font-medium;
+  }
+
+  .btn-danger {
+    @apply bg-status-danger/10 text-status-danger font-medium px-4 py-2 rounded-xl
+           hover:bg-status-danger/20 active:scale-95 transition-all duration-200 text-sm;
   }
 
   .input-field {
@@ -96,6 +119,10 @@
     @apply bg-status-success/20 text-status-success text-xs px-2.5 py-1 rounded-full font-medium;
   }
 
+  .badge-pro {
+    @apply bg-purple-gradient text-white text-xs px-2 py-0.5 rounded-full font-semibold tracking-wide;
+  }
+
   .nav-item {
     @apply flex items-center gap-3 px-4 py-3 rounded-xl text-text-muted
            hover:text-text-primary hover:bg-bg-elevated transition-all duration-200
@@ -114,6 +141,29 @@
   .gold-ring {
     @apply ring-2 ring-gold/40 ring-offset-2 ring-offset-bg-base;
   }
+
+  .kbd {
+    @apply inline-flex items-center justify-center px-1.5 py-0.5 rounded-md
+           bg-bg-elevated border border-bg-border text-text-muted text-xs font-mono
+           min-w-[20px] h-5;
+  }
+
+  .tooltip {
+    @apply absolute z-50 px-2 py-1 bg-bg-elevated border border-bg-border rounded-lg
+           text-xs text-text-secondary shadow-card whitespace-nowrap;
+  }
+
+  .progress-bar {
+    @apply h-1.5 bg-bg-border rounded-full overflow-hidden;
+  }
+
+  .progress-bar-fill {
+    @apply h-full rounded-full bg-gold-gradient transition-all duration-500;
+  }
+
+  .divider {
+    @apply border-t border-bg-border my-4;
+  }
 }
 
 @layer utilities {
@@ -124,12 +174,33 @@
     background-clip: text;
   }
 
+  .text-gradient-purple {
+    background: linear-gradient(135deg, #A855F7, #7C3AED);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   .glow-gold {
     box-shadow: 0 0 30px rgba(245, 200, 66, 0.2);
   }
 
+  .glow-gold-strong {
+    box-shadow: 0 0 50px rgba(245, 200, 66, 0.3);
+  }
+
   .animate-in {
     animation: slideIn 0.3s ease-out;
+  }
+
+  .bg-mesh {
+    background-image: radial-gradient(at 40% 20%, rgba(245,200,66,0.06) 0px, transparent 50%),
+                       radial-gradient(at 80% 80%, rgba(59,130,246,0.04) 0px, transparent 50%);
+  }
+
+  .bg-dots {
+    background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 }
 
@@ -153,4 +224,14 @@
   background: linear-gradient(90deg, transparent, rgba(245,200,66,0.05), transparent);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.gradient-shift {
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
 }

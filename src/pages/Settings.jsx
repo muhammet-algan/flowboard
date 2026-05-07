@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { User, Bell, Shield, Palette, Globe, ChevronRight, Check, Moon } from 'lucide-react'
+import { User, Bell, Shield, Palette, Globe, Check, Info } from 'lucide-react'
 import { currentUser } from '../data/mockData'
 
 const SECTIONS = [
@@ -8,6 +8,7 @@ const SECTIONS = [
   { id: 'notifications', label: 'Bildirimler', icon: Bell },
   { id: 'security', label: 'Güvenlik', icon: Shield },
   { id: 'appearance', label: 'Görünüm', icon: Palette },
+  { id: 'language', label: 'Dil & Bölge', icon: Globe },
 ]
 
 export default function Settings() {
@@ -42,6 +43,19 @@ export default function Settings() {
               </button>
             ))}
           </nav>
+
+          {/* Plan Info */}
+          <div className="card p-4 mt-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="badge-pro text-[10px]">PRO</span>
+              <span className="text-xs text-text-primary font-semibold">FlowBoard Pro</span>
+            </div>
+            <p className="text-xs text-text-muted">Tüm premium özellikler aktif</p>
+            <div className="mt-3 h-1 bg-bg-border rounded-full overflow-hidden">
+              <div className="h-full w-[67%] rounded-full bg-purple-gradient" />
+            </div>
+            <p className="text-xs text-text-muted mt-1">Depolama: 6.7 / 10 GB</p>
+          </div>
         </div>
 
         {/* Content */}
@@ -108,6 +122,7 @@ export default function Settings() {
                   { label: 'Yorum bildirimleri', desc: 'Görevlerinize yorum yapıldığında bildirim al', on: false },
                   { label: 'Sprint hatırlatıcıları', desc: 'Sprint bitiş tarihlerinden önce hatırlat', on: true },
                   { label: 'Haftalık özet', desc: 'Her Pazartesi haftalık performans özeti gönder', on: false },
+                  { label: 'Masaüstü bildirimleri', desc: 'Tarayıcı push bildirimleri al', on: true },
                 ].map((item, i) => (
                   <NotifRow key={i} {...item} />
                 ))}
@@ -128,6 +143,10 @@ export default function Settings() {
                 <div>
                   <label className="text-xs font-semibold text-text-muted uppercase tracking-wider block mb-2">Şifre Tekrar</label>
                   <input id="confirm-pass" type="password" placeholder="••••••••" className="input-field w-full" />
+                </div>
+                <div className="flex items-start gap-2 p-3 rounded-xl bg-bg-elevated border border-bg-border">
+                  <Info size={14} className="text-status-info flex-shrink-0 mt-0.5" />
+                  <p className="text-xs text-text-muted">Şifreniz en az 8 karakter, bir büyük harf, bir rakam ve bir özel karakter içermelidir.</p>
                 </div>
                 <button className="btn-primary">Şifreyi Güncelle</button>
               </div>
@@ -167,6 +186,88 @@ export default function Settings() {
                   <div className="flex gap-2">
                     {['#F5C842', '#3B82F6', '#22C55E', '#A855F7', '#EF4444'].map((c, i) => (
                       <button key={i} className={`w-8 h-8 rounded-full transition-transform duration-200 ${i === 0 ? 'scale-125 ring-2 ring-white/30' : 'hover:scale-110'}`} style={{ backgroundColor: c }} />
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">Yazı Boyutu</p>
+                  <div className="flex gap-2">
+                    {['Küçük', 'Orta', 'Büyük'].map((size, i) => (
+                      <button
+                        key={size}
+                        className={`text-xs px-4 py-2 rounded-xl border transition-all duration-200
+                                    ${i === 1 ? 'border-gold bg-gold-dim text-gold' : 'border-bg-border text-text-muted hover:text-text-primary hover:border-bg-elevated'}`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {active === 'language' && (
+              <div className="card p-5 space-y-5">
+                <h2 className="text-sm font-semibold text-text-primary">Dil & Bölge Ayarları</h2>
+                <div>
+                  <label className="text-xs font-semibold text-text-muted uppercase tracking-wider block mb-2">Uygulama Dili</label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { code: 'tr', label: 'Türkçe', flag: '🇹🇷', active: true },
+                      { code: 'en', label: 'English', flag: '🇬🇧', active: false },
+                    ].map(lang => (
+                      <div
+                        key={lang.code}
+                        className={`p-3 rounded-xl border cursor-pointer transition-all duration-200 flex items-center gap-3
+                                    ${lang.active ? 'border-gold bg-gold-dim' : 'border-bg-border hover:border-bg-elevated'}`}
+                      >
+                        <span className="text-xl">{lang.flag}</span>
+                        <div>
+                          <p className="text-sm text-text-primary font-medium">{lang.label}</p>
+                        </div>
+                        {lang.active && (
+                          <div className="ml-auto w-4 h-4 rounded-full bg-gold flex items-center justify-center">
+                            <Check size={10} className="text-bg-base" />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-text-muted uppercase tracking-wider block mb-2">Saat Dilimi</label>
+                  <select className="input-field w-full" defaultValue="europe-istanbul">
+                    <option value="europe-istanbul">Europe/Istanbul (UTC+3)</option>
+                    <option value="europe-london">Europe/London (UTC+0)</option>
+                    <option value="america-newyork">America/New_York (UTC-5)</option>
+                    <option value="asia-tokyo">Asia/Tokyo (UTC+9)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-text-muted uppercase tracking-wider block mb-2">Tarih Formatı</label>
+                  <div className="flex gap-2">
+                    {['DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY-MM-DD'].map((fmt, i) => (
+                      <button
+                        key={fmt}
+                        className={`text-xs px-3 py-2 rounded-xl border font-mono transition-all duration-200
+                                    ${i === 0 ? 'border-gold bg-gold-dim text-gold' : 'border-bg-border text-text-muted hover:text-text-primary hover:border-bg-elevated'}`}
+                      >
+                        {fmt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-text-muted uppercase tracking-wider block mb-2">Haftanın İlk Günü</label>
+                  <div className="flex gap-2">
+                    {['Pazartesi', 'Pazar'].map((day, i) => (
+                      <button
+                        key={day}
+                        className={`text-xs px-4 py-2 rounded-xl border transition-all duration-200
+                                    ${i === 0 ? 'border-gold bg-gold-dim text-gold' : 'border-bg-border text-text-muted hover:text-text-primary hover:border-bg-elevated'}`}
+                      >
+                        {day}
+                      </button>
                     ))}
                   </div>
                 </div>

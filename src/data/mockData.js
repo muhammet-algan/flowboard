@@ -10,6 +10,7 @@ export const currentUser = {
   avatar: 'MY',
   avatarColor: '#F5C842',
   joinDate: '2024-01-15',
+  plan: 'Pro',
 }
 
 export const teamMembers = [
@@ -22,20 +23,20 @@ export const teamMembers = [
 
 export const tasks = [
   // TO DO
-  { id: 't1', title: 'Auth sistemi için JWT refresh token implemente et', status: 'todo', priority: 'high', assignee: 'u3', dueDate: '2025-05-15', tags: ['backend', 'security'], description: 'Access token süresi dolduğunda refresh token kullanarak yeni token üretme mekanizması kurulacak.', subtasks: [{id:'s1', text:'Token rotation logic', done: false},{id:'s2', text:'Redis integration', done: false}] },
-  { id: 't2', title: 'Dashboard için karanlık tema toggle ekle', status: 'todo', priority: 'low', assignee: 'u2', dueDate: '2025-05-20', tags: ['frontend', 'ui'], description: 'Kullanıcı tercihine göre tema değiştirme özelliği.', subtasks: [] },
-  { id: 't3', title: 'API rate limiting middleware yaz', status: 'todo', priority: 'medium', assignee: 'u4', dueDate: '2025-05-18', tags: ['devops', 'api'], description: 'Her IP için dakikada 100 istek sınırı koyulacak.', subtasks: [{id:'s3', text:'Redis counter', done: false}] },
-  { id: 't4', title: 'Onboarding flow tasarımını bitir', status: 'todo', priority: 'medium', assignee: 'u2', dueDate: '2025-05-22', tags: ['design'], description: 'Yeni kullanıcılar için adım adım karşılama ekranı.', subtasks: [] },
+  { id: 't1', title: 'Auth sistemi için JWT refresh token implemente et', status: 'todo', priority: 'high', assignee: 'u3', dueDate: '2025-05-15', tags: ['backend', 'security'], description: 'Access token süresi dolduğunda refresh token kullanarak yeni token üretme mekanizması kurulacak.', subtasks: [{id:'s1', text:'Token rotation logic', done: false},{id:'s2', text:'Redis integration', done: false}], createdAt: '2025-05-06' },
+  { id: 't2', title: 'Dashboard için karanlık tema toggle ekle', status: 'todo', priority: 'low', assignee: 'u2', dueDate: '2025-05-20', tags: ['frontend', 'ui'], description: 'Kullanıcı tercihine göre tema değiştirme özelliği.', subtasks: [], createdAt: '2025-05-06' },
+  { id: 't3', title: 'API rate limiting middleware yaz', status: 'todo', priority: 'medium', assignee: 'u4', dueDate: '2025-05-18', tags: ['devops', 'api'], description: 'Her IP için dakikada 100 istek sınırı koyulacak.', subtasks: [{id:'s3', text:'Redis counter', done: false}], createdAt: '2025-05-05' },
+  { id: 't4', title: 'Onboarding flow tasarımını bitir', status: 'todo', priority: 'medium', assignee: 'u2', dueDate: '2025-05-22', tags: ['design'], description: 'Yeni kullanıcılar için adım adım karşılama ekranı.', subtasks: [], createdAt: '2025-05-04' },
   // IN PROGRESS
-  { id: 't5', title: 'FlowBoard Kanban board bileşeni geliştir', status: 'inprogress', priority: 'high', assignee: 'u1', dueDate: '2025-05-10', tags: ['frontend', 'feature'], description: 'Drag & drop destekli görev tahtası.', subtasks: [{id:'s4', text:'dnd-kit entegrasyonu', done: true},{id:'s5', text:'Card tasarımı', done: true},{id:'s6', text:'Column sıralama', done: false}] },
-  { id: 't6', title: 'PostgreSQL veritabanı şemasını migrate et', status: 'inprogress', priority: 'high', assignee: 'u3', dueDate: '2025-05-09', tags: ['backend', 'database'], description: 'Users, tasks ve activity_logs tablolarını oluştur.', subtasks: [{id:'s7', text:'Migration dosyaları', done: true},{id:'s8', text:'Seed data', done: false}] },
-  { id: 't7', title: 'CI/CD pipeline kur (GitHub Actions)', status: 'inprogress', priority: 'medium', assignee: 'u4', dueDate: '2025-05-12', tags: ['devops'], description: 'Her PR üzerinde otomatik test ve deploy akışı.', subtasks: [{id:'s9', text:'Test workflow', done: true}] },
-  { id: 't8', title: 'Pomodoro zamanlayıcı hook yaz', status: 'inprogress', priority: 'low', assignee: 'u5', dueDate: '2025-05-14', tags: ['frontend'], description: 'usePomodoro custom hook ile sayaç ve oturum yönetimi.', subtasks: [] },
+  { id: 't5', title: 'FlowBoard Kanban board bileşeni geliştir', status: 'inprogress', priority: 'high', assignee: 'u1', dueDate: '2025-05-10', tags: ['frontend', 'feature'], description: 'Drag & drop destekli görev tahtası.', subtasks: [{id:'s4', text:'dnd-kit entegrasyonu', done: true},{id:'s5', text:'Card tasarımı', done: true},{id:'s6', text:'Column sıralama', done: false}], createdAt: '2025-05-03' },
+  { id: 't6', title: 'PostgreSQL veritabanı şemasını migrate et', status: 'inprogress', priority: 'high', assignee: 'u3', dueDate: '2025-05-09', tags: ['backend', 'database'], description: 'Users, tasks ve activity_logs tablolarını oluştur.', subtasks: [{id:'s7', text:'Migration dosyaları', done: true},{id:'s8', text:'Seed data', done: false}], createdAt: '2025-05-02' },
+  { id: 't7', title: 'CI/CD pipeline kur (GitHub Actions)', status: 'inprogress', priority: 'medium', assignee: 'u4', dueDate: '2025-05-12', tags: ['devops'], description: 'Her PR üzerinde otomatik test ve deploy akışı.', subtasks: [{id:'s9', text:'Test workflow', done: true}], createdAt: '2025-05-01' },
+  { id: 't8', title: 'Pomodoro zamanlayıcı hook yaz', status: 'inprogress', priority: 'low', assignee: 'u5', dueDate: '2025-05-14', tags: ['frontend'], description: 'usePomodoro custom hook ile sayaç ve oturum yönetimi.', subtasks: [], createdAt: '2025-05-01' },
   // DONE
-  { id: 't9',  title: 'Figma tasarım sistemini oluştur', status: 'done', priority: 'high', assignee: 'u2', dueDate: '2025-05-01', tags: ['design'], description: 'Tüm bileşenler ve renk paletini Figma\'da dokümante et.', subtasks: [] },
-  { id: 't10', title: 'React Router v6 kurulumu ve routing yapısı', status: 'done', priority: 'medium', assignee: 'u1', dueDate: '2025-05-02', tags: ['frontend'], description: 'Tüm sayfa rotaları ve layout wrapper tamamlandı.', subtasks: [] },
-  { id: 't11', title: 'Tailwind CSS yapılandırması', status: 'done', priority: 'low', assignee: 'u1', dueDate: '2025-05-01', tags: ['frontend', 'ui'], description: 'Design token sistemi ve custom utilities oluşturuldu.', subtasks: [] },
-  { id: 't12', title: 'Mock veri seti hazırla', status: 'done', priority: 'low', assignee: 'u5', dueDate: '2025-05-03', tags: ['backend'], description: 'Geliştirme ortamı için gerçekçi test verisi.', subtasks: [] },
+  { id: 't9',  title: 'Figma tasarım sistemini oluştur', status: 'done', priority: 'high', assignee: 'u2', dueDate: '2025-05-01', tags: ['design'], description: 'Tüm bileşenler ve renk paletini Figma\'da dokümante et.', subtasks: [], createdAt: '2025-04-28' },
+  { id: 't10', title: 'React Router v6 kurulumu ve routing yapısı', status: 'done', priority: 'medium', assignee: 'u1', dueDate: '2025-05-02', tags: ['frontend'], description: 'Tüm sayfa rotaları ve layout wrapper tamamlandı.', subtasks: [], createdAt: '2025-04-27' },
+  { id: 't11', title: 'Tailwind CSS yapılandırması', status: 'done', priority: 'low', assignee: 'u1', dueDate: '2025-05-01', tags: ['frontend', 'ui'], description: 'Design token sistemi ve custom utilities oluşturuldu.', subtasks: [], createdAt: '2025-04-26' },
+  { id: 't12', title: 'Mock veri seti hazırla', status: 'done', priority: 'low', assignee: 'u5', dueDate: '2025-05-03', tags: ['backend'], description: 'Geliştirme ortamı için gerçekçi test verisi.', subtasks: [], createdAt: '2025-04-25' },
 ]
 
 export const weeklyData = [
@@ -83,3 +84,29 @@ export const kpiData = {
   pomodorosToday: 6,
   upcomingDeadlines: 3,
 }
+
+// ── Sprint Milestone Data ──────────────────────────────────
+export const sprintData = {
+  name: 'Sprint 3',
+  startDate: '2025-05-01',
+  endDate: '2025-05-14',
+  totalTasks: 12,
+  completedTasks: 4,
+  goals: [
+    { id: 'g1', text: 'Kanban board MVP tamamla', done: true },
+    { id: 'g2', text: 'Auth sistemi entegrasyonu', done: false },
+    { id: 'g3', text: 'Dashboard grafik bileşenleri', done: true },
+    { id: 'g4', text: 'CI/CD pipeline kurulumu', done: false },
+  ]
+}
+
+// ── Motivational Quotes ────────────────────────────────────
+export const motivationalQuotes = [
+  { text: 'Odaklanmak, hayır demeyi bilmektir.', author: 'Steve Jobs' },
+  { text: 'Başarı, küçük çabaların tekrarıdır.', author: 'Robert Collier' },
+  { text: 'Bugün yapabileceklerini yarına bırakma.', author: 'Benjamin Franklin' },
+  { text: 'Basitlik, en üst düzey inceliktir.', author: 'Leonardo da Vinci' },
+  { text: 'İlerlemek, mükemmel olmaktan daha önemlidir.', author: 'Mark Zuckerberg' },
+  { text: 'Kod yazmak, düşünmenin somut halidir.', author: 'Linus Torvalds' },
+  { text: 'Her uzman bir zamanlar amatördü.', author: 'Helen Hayes' },
+]

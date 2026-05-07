@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, X, Pin, PinOff, Edit3, Trash2, Check } from 'lucide-react'
+import { Plus, X, Pin, PinOff, Edit3, Trash2, Check, Search } from 'lucide-react'
 import useAppStore from '../store/useAppStore'
 
 const NOTE_COLORS = ['#F5C842', '#3B82F6', '#22C55E', '#EF4444', '#A855F7', '#F59E0B', '#EC4899']
@@ -65,11 +65,11 @@ function NoteCard({ note, onDelete, onPin, onUpdate }) {
           rows={4}
         />
       ) : (
-        <p className="text-xs text-text-secondary leading-relaxed whitespace-pre-line">{note.content}</p>
+        <p className="text-xs text-text-secondary leading-relaxed whitespace-pre-line line-clamp-4">{note.content}</p>
       )}
 
-      <div className="flex items-center justify-between">
-        <span className="text-xs text-text-muted">{note.createdAt}</span>
+      <div className="flex items-center justify-between mt-auto">
+        <span className="text-xs text-text-muted font-mono">{note.createdAt}</span>
         {note.pinned && (
           <span className="text-xs text-gold bg-gold-dim px-2 py-0.5 rounded-full flex items-center gap-1">
             <Pin size={10} /> Sabit
@@ -86,6 +86,7 @@ export default function Notes() {
   const [newTitle, setNewTitle] = useState('')
   const [newContent, setNewContent] = useState('')
   const [newColor, setNewColor] = useState(NOTE_COLORS[0])
+  const [searchQuery, setSearchQuery] = useState('')
 
   const handleAdd = () => {
     if (!newTitle.trim()) return
@@ -96,14 +97,38 @@ export default function Notes() {
     setShowAdd(false)
   }
 
-  const pinned = notes.filter(n => n.pinned)
-  const unpinned = notes.filter(n => !n.pinned)
+  // Filter notes by search query
+  const filteredNotes = useMemo(() => {
+    if (!searchQuery.trim()) return notes
+    const q = searchQuery.toLowerCase()
+    return notes.filter(n =>
+      n.title.toLowerCase().includes(q) || n.content.toLowerCase().includes(q)
+    )
+  }, [notes, searchQuery])
+
+  const pinned = filteredNotes.filter(n => n.pinned)
+  const unpinned = filteredNotes.filter(n => !n.pinned)
 
   return (
     <div className="space-y-6">
       {/* Toolbar */}
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-text-muted">{notes.length} not</p>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 flex-1">
+          <p className="text-sm text-text-muted flex-shrink-0">{notes.length} not</p>
+
+          {/* Search */}
+          <div className="relative flex-1 max-w-xs">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+            <input
+              id="notes-search"
+              type="text"
+              placeholder="Notlarda ara..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="input-field w-full pl-9 py-2"
+            />
+          </div>
+        </div>
         <button
           id="add-note-btn"
           onClick={() => setShowAdd(true)}
@@ -113,6 +138,21 @@ export default function Notes() {
           Yeni Not
         </button>
       </div>
+
+      {/* Search Results Info */}
+      {searchQuery.trim() && (
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-text-muted">
+            "{searchQuery}" için <span className="text-text-primary font-semibold">{filteredNotes.length}</span> sonuç bulundu
+          </p>
+          <button
+            onClick={() => setSearchQuery('')}
+            className="text-xs text-gold hover:text-gold-muted transition-colors"
+          >
+            Aramayı temizle
+          </button>
+        </div>
+      )}
 
       {/* Add Note Modal */}
       <AnimatePresence>
@@ -184,6 +224,7 @@ export default function Notes() {
           <div className="flex items-center gap-2 mb-3">
             <Pin size={12} className="text-gold" />
             <p className="text-xs font-semibold text-text-muted uppercase tracking-wider">Sabitlenmiş</p>
+            <span className="text-xs text-text-muted">({pinned.length})</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
             <AnimatePresence mode="popLayout">
@@ -204,7 +245,10 @@ export default function Notes() {
       {/* All Notes */}
       <div>
         {pinned.length > 0 && (
-          <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">Diğerleri</p>
+          <div className="flex items-center gap-2 mb-3">
+            <p className="text-xs font-semibold text-text-muted uppercase tracking-wider">Diğerleri</p>
+            <span className="text-xs text-text-muted">({unpinned.length})</span>
+          </div>
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           <AnimatePresence mode="popLayout">
@@ -219,6 +263,14 @@ export default function Notes() {
             ))}
           </AnimatePresence>
         </div>
+
+        {/* Empty search state */}
+        {filteredNotes.length === 0 && searchQuery.trim() && (
+          <div className="card p-12 text-center">
+            <Search size={32} className="text-text-muted mx-auto mb-3 opacity-50" />
+            <p className="text-sm text-text-muted">Aramanızla eşleşen not bulunamadı</p>
+          </div>
+        )}
       </div>
     </div>
   )
